@@ -15,12 +15,12 @@ import { UpdateSimDto } from './dto/update-sim.dto';
 export class SimController {
   constructor(private readonly simService: SimService) {}
 
-  @Post()
+  @Post('add')
   create(@Body() createSimDto: CreateSimDto) {
     return this.simService.create(createSimDto);
   }
 
-  @Get()
+  @Get('listall')
   findAll() {
     return this.simService.findAll();
   }

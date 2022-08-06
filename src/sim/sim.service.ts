@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateSimDto } from './dto/create-sim.dto';
 import { UpdateSimDto } from './dto/update-sim.dto';
+import { Sim } from './entities/sim.entity';
 
 @Injectable()
 export class SimService {
+  constructor(@InjectRepository(Sim) private repo: Repository<Sim>) {}
+
   create(createSimDto: CreateSimDto) {
-    return 'This action adds a new sim';
+    const sim = this.repo.create(createSimDto);
+    return this.repo.save(sim);
   }
 
   findAll() {
-    return `This action returns all sim`;
+    return this.repo.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} sim`;
+    return this.repo.findOne({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  update(id: number, updateSimDto: UpdateSimDto) {
-    return `This action updates a #${id} sim`;
+  async update(id: number, updateSimDto: UpdateSimDto) {
+    const sim = await this.findOne(id);
+
+    if (!sim) {
+      throw new NotFoundException('Sim Not Found');
+    }
+    Object.assign(sim, updateSimDto);
+    return this.repo.save(sim);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} sim`;
+  async remove(id: number) {
+    const sim = await this.findOne(id);
+
+    if (!sim) {
+      throw new NotFoundException('Sim Not Found');
+    }
+    return this.repo.remove(sim);
   }
 }
