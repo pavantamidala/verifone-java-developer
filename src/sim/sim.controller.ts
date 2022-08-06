@@ -20,12 +20,12 @@ export class SimController {
     return this.simService.create(createSimDto);
   }
 
-  @Get('toRenew')
+  @Get('to-renew')
   toRenew() {
     return this.simService.toRenew();
   }
 
-  @Get('listall')
+  @Get('list-all')
   findAll() {
     return this.simService.findAll();
   }
@@ -35,7 +35,10 @@ export class SimController {
     return this.simService.findOne(+id);
   }
 
-
+  @Get('renew/:id')
+  renew(@Param('id') id: string) {
+    return this.simService.renew(+id);
+  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSimDto: UpdateSimDto) {

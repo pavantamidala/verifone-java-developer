@@ -62,4 +62,19 @@ export class SimService {
       .where(`sim.expiryDate BETWEEN '${timestamp}' AND '${after30DaysDate}'`)
       .getMany();
   }
+
+  async renew(id: number) {
+    const sim = await this.findOne(id);
+
+    if (!sim) {
+      throw new NotFoundException('Sim Not Found');
+    }
+
+    const date = new Date(sim.expiryDate);
+
+    return this.update(id, {
+      ...sim,
+      expiryDate: date.setDate(date.getDate() + 30),
+    });
+  }
 }
