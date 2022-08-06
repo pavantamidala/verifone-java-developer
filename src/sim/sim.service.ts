@@ -44,4 +44,22 @@ export class SimService {
     }
     return this.repo.remove(sim);
   }
+
+  toRenew() {
+    const now = new Date();
+    const startOfDay: any = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    );
+    const timestamp: any = startOfDay / 1000;
+
+    const todayDate = new Date();
+    todayDate.setDate(todayDate.getDate() + 30);
+    const after30DaysDate = +new Date(todayDate);
+    return this.repo
+      .createQueryBuilder('sim')
+      .where(`sim.expiryDate BETWEEN '${timestamp}' AND '${after30DaysDate}'`)
+      .getMany();
+  }
 }
